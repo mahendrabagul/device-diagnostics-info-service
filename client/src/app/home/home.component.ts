@@ -25,8 +25,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     //     this.devices = devices;
     //   });
     this.getAllDevices().subscribe(devices => this.devices = devices);
-    this.callMe();
-    this.sendMessage();
+    // this.callMe();
+    // this.sendMessage();
   }
   callMe() {
     this.diagnosticsService.messages.subscribe(msg => {
