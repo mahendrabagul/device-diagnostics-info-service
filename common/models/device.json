@@ -10,13 +10,16 @@
     "cpu_usage": {
       "type": "string"
     },
-    "memory_usage": {
+    "free_memory": {
       "type": "string"
     },
-    "network_status": {
+    "hostname": {
       "type": "string"
     },
-    "cpu_cache": {
+    "username": {
+      "type": "string"
+    },
+    "os_platform": {
       "type": "string"
     }
   },

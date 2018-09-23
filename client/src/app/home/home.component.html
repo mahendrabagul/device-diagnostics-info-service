@@ -1,0 +1,26 @@
+<div class="container">
+  <div class="row">
+    <table class="table table-dark table-hover table-striped">
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Hostname</th>
+          <th>OS Platform</th>
+          <th>Free Memory</th>
+          <th>CPU Usage</th>
+        </tr>
+
+      </thead>
+      <tbody>
+        <tr *ngFor="let device of devices">
+          <td> {{device.username}}</td>
+          <td> {{device.hostname}}</td>
+          <td> {{device.os_platform}}</td>
+          <td> {{device.free_memory}}</td>
+          <td> {{device.cpu_usage}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

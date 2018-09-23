@@ -21,9 +21,42 @@ app.start = function() {
 // Bootstrap the application, configure models, datasources and middleware.
 // Sub-apps like REST API are mounted via boot scripts.
 boot(app, __dirname, function(err) {
-  if (err) throw err;
+  if (err) {
+    throw err;
+  }
 
   // start the server if `$ node server.js`
-  if (require.main === module)
-    app.start();
+  // if (require.main === module) {
+  //   app.start();
+  // }
+  if (require.main === module) {
+    //Comment this app.start line and add following lines
+    //app.start();
+    app.io = require('socket.io')(app.start());
+    require('socketio-auth')(app.io, {
+      authenticate: function (socket, value, callback) {
+        var AccessToken = app.models.AccessToken;
+        //get credentials sent by the client
+        var token = AccessToken.find({
+          where:{
+            and: [{ userId: value.userId }, { id: value.id }]
+          }
+        }, function(err, tokenDetail){
+          if (err) throw err;
+          if(tokenDetail.length){
+            callback(null, true);
+          } else {
+            callback(null, false);
+          }
+        }); //find function..
+      } //authenticate function..
+    });
+
+    app.io.on('connection', function(socket){
+      console.log('a user connected');
+      socket.on('disconnect', function(){
+        console.log('user disconnected');
+      });
+    });
+  }
 });
