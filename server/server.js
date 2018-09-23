@@ -2,7 +2,6 @@
 
 var loopback = require('loopback');
 var boot = require('loopback-boot');
-
 var app = module.exports = loopback();
 
 app.start = function() {
@@ -34,28 +33,43 @@ boot(app, __dirname, function(err) {
     //app.start();
     app.io = require('socket.io')(app.start());
     require('socketio-auth')(app.io, {
-      authenticate: function (socket, value, callback) {
+      authenticate: function(socket, value, callback) {
         var AccessToken = app.models.AccessToken;
         //get credentials sent by the client
         var token = AccessToken.find({
-          where:{
-            and: [{ userId: value.userId }, { id: value.id }]
+          where: {
+            and: [{userId: value.userId}, {id: value.id}],
+          },
+        }, function(err, tokenDetail) {
+          if (err) {
+            throw err;
           }
-        }, function(err, tokenDetail){
-          if (err) throw err;
-          if(tokenDetail.length){
+          if (tokenDetail.length) {
             callback(null, true);
           } else {
             callback(null, false);
           }
         }); //find function..
-      } //authenticate function..
+      }, //authenticate function..
     });
 
-    app.io.on('connection', function(socket){
-      console.log('a user connected');
-      socket.on('disconnect', function(){
+    setInterval(function() {
+      app.io.sockets.emit('message', 'mahendra from server');
+    }, 1000);
+
+    app.io.on('connection', (socket) => {
+      // Log whenever a user connects
+      console.log('user connected');
+      // Log whenever a client disconnects from our websocket server
+      socket.on('disconnect', function() {
         console.log('user disconnected');
+      });
+      // When we receive a 'message' event from our client, print out
+      // the contents of that message and then echo it back to our client
+      // using `io.emit()`
+      socket.on('message', (message) => {
+        console.log('Message Received: ' + message);
+        app.io.emit('message', {type: 'new-message', text: message});
       });
     });
   }

@@ -14,7 +14,11 @@ import { FormsModule } from '@angular/forms';
 import { LoginRedirect } from './services/login-redirect.service';
 import { EnsureAuthenticated } from './services/ensure-authenticated.service';
 import { HeaderComponent } from './header/header.component';
+import { DiagnosticsService } from './diagnostics.service';
+import { WebsocketService } from './websocket.service';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
+const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,6 +29,7 @@ import { HeaderComponent } from './header/header.component';
   ],
   imports: [
     BrowserModule, CommonModule, HttpClientModule, FormsModule,
+    SocketIoModule.forRoot(config),
     RouterModule.forRoot([
       {
         path: 'login',
@@ -40,7 +45,7 @@ import { HeaderComponent } from './header/header.component';
     ])
   ],
   providers: [DataService, AuthService, EnsureAuthenticated,
-    LoginRedirect
+    LoginRedirect, DiagnosticsService, WebsocketService
   ],
   bootstrap: [AppComponent]
 })

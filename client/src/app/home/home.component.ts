@@ -4,6 +4,7 @@ import { Subscription, Observable } from 'rxjs';
 import { Device } from '../device';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
+import { DiagnosticsService } from '../diagnostics.service';
 const API_URL = 'http://localhost:3000/api/';
 
 @Component({
@@ -14,15 +15,28 @@ const API_URL = 'http://localhost:3000/api/';
 export class HomeComponent implements OnInit, OnDestroy {
   devices: Device[];
   sub: Subscription;
-  constructor(private authService: AuthService, private dataService: DataService, private httpClient: HttpClient) {
+  // tslint:disable-next-line:max-line-length
+  constructor(private diagnosticsService: DiagnosticsService, private authService: AuthService, private dataService: DataService, private httpClient: HttpClient) {
   }
 
   ngOnInit() {
-    this.sub = this.dataService.getDevices()
-      .subscribe(devices => {
-        this.devices = devices;
-      });
-//    this.getAllDevices().subscribe(devices => this.devices = devices);
+    // this.sub = this.dataService.getDevices()
+    //   .subscribe(devices => {
+    //     this.devices = devices;
+    //   });
+    this.getAllDevices().subscribe(devices => this.devices = devices);
+    this.callMe();
+    this.sendMessage();
+  }
+  callMe() {
+    this.diagnosticsService.messages.subscribe(msg => {
+      console.log(msg);
+    });
+  }
+
+  sendMessage() {
+    console.log('In SendMessage');
+    this.diagnosticsService.sendMsg('Test Message');
   }
 
   getAllDevices(): Observable<Device[]> {
