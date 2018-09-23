@@ -26,7 +26,7 @@ export class DiagnosticsService {
   }
 
   sendMessage(msg: string) {
-    this.socket.emit('message', msg + 'mahendra');
+    this.socket.emit('message', msg);
   }
   getMessage() {
     return this.socket
